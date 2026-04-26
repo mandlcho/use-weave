@@ -25,7 +25,7 @@ Primary user does video post-production, scene restaging, transition generation,
 
 ```
 ~/.claude/skills/weave/
-├── weave.md                    # Main skill file (trigger + workflow logic)
+├── SKILL.md                    # Main skill file — triggers as /weave
 ├── references/
 │   ├── image-models.md         # Text-to-image model comparison table
 │   ├── video-models.md         # Text-to-video model comparison table
@@ -37,9 +37,20 @@ Primary user does video post-production, scene restaging, transition generation,
 │   ├── editing-tools.md        # Non-generative nodes (crop, blur, compositor, etc.)
 │   ├── text-tools.md           # Prompt nodes, LLM nodes, describers
 │   └── helpers.md              # Import, export, router, iterators, datatypes
+~/.claude/skills/iwantto/
+├── SKILL.md                    # Lightweight wrapper — triggers as /iwantto
 ```
 
-## Main Skill File (`weave.md`)
+## Slash Commands
+
+Two slash commands invoke the skill:
+
+- **`/weave`** — main command, e.g., `/weave remove an object from a scene`
+- **`/iwantto`** — alias, e.g., `/iwantto remove an object from a scene`
+
+Both activate the same Weave knowledge. `/iwantto` is a lightweight skill that reads the main `~/.claude/skills/weave/SKILL.md` and follows its instructions.
+
+## Main Skill File (`SKILL.md`)
 
 ### Trigger Conditions
 

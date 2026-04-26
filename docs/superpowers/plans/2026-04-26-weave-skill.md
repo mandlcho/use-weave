@@ -861,16 +861,59 @@ git commit -m "feat: seed workflow library with restaging, morph transition, and
 
 ---
 
-### Task 13: Verify and Push
+### Task 13: Create /iwantto Slash Command
+
+**Files:**
+- Create: `~/.claude/skills/iwantto/SKILL.md`
+
+- [ ] **Step 1: Create the iwantto skill directory**
+
+```bash
+mkdir -p ~/.claude/skills/iwantto
+```
+
+- [ ] **Step 2: Write the iwantto skill file**
+
+Create `~/.claude/skills/iwantto/SKILL.md` with this content:
+
+```markdown
+---
+name: iwantto
+description: "Quick way to ask Weave for help. Usage: /iwantto remove an object, /iwantto upscale a video, /iwantto make a morph transition. Triggers the full Weave assistant."
+---
+
+# I Want To... (Weave Assistant)
+
+You have been invoked via the `/iwantto` command. The user is describing a task they want to accomplish in Figma Weave.
+
+**Read the full Weave skill now:** Read `~/.claude/skills/weave/SKILL.md` and follow all its instructions to help the user with their request.
+
+The user's intent follows the `/iwantto` command — parse it as the task description and respond with:
+1. The right nodes and models (budget vs. quality)
+2. An ASCII node graph showing how to wire them
+3. A suggested prompt ready to paste into Weave
+```
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add ~/.claude/skills/iwantto/SKILL.md
+git commit -m "feat: add /iwantto slash command as alias for /weave"
+```
+
+---
+
+### Task 14: Verify and Push
 
 - [ ] **Step 1: Verify file structure**
 
 ```bash
-find ~/.claude/skills/weave -type f | sort
+find ~/.claude/skills/weave ~/.claude/skills/iwantto -type f | sort
 ```
 
 Expected output:
 ```
+/Users/mandl/.claude/skills/iwantto/SKILL.md
 /Users/mandl/.claude/skills/weave/SKILL.md
 /Users/mandl/.claude/skills/weave/references/3d-models.md
 /Users/mandl/.claude/skills/weave/references/edit-models.md
@@ -890,7 +933,8 @@ Expected output:
 - [ ] **Step 2: Copy skill to repo for version control**
 
 ```bash
-cp -r ~/.claude/skills/weave/ /Users/mandl/Desktop/projects/use-weave/skill/
+cp -r ~/.claude/skills/weave/ /Users/mandl/Desktop/projects/use-weave/skill/weave/
+cp -r ~/.claude/skills/iwantto/ /Users/mandl/Desktop/projects/use-weave/skill/iwantto/
 ```
 
 - [ ] **Step 3: Commit the repo copy and push**
@@ -898,12 +942,15 @@ cp -r ~/.claude/skills/weave/ /Users/mandl/Desktop/projects/use-weave/skill/
 ```bash
 cd /Users/mandl/Desktop/projects/use-weave
 git add skill/
-git commit -m "feat: add complete Weave skill with references and seed workflows"
+git commit -m "feat: add complete Weave skill with references, seed workflows, and /iwantto alias"
 git push
 ```
 
 - [ ] **Step 4: Test the skill triggers**
 
-Start a new Claude Code session and type: "How do I remove an object from a scene in Weave?"
+Test both slash commands in a new Claude Code session:
 
-Expected: Claude activates the Weave skill, recommends Painter + Edit model, shows ASCII node graph, suggests prompt, and presents budget vs. quality model options.
+1. Type: `/weave how do I remove an object from a scene?`
+2. Type: `/iwantto remove an object from a scene`
+
+Expected for both: Claude activates the Weave skill, recommends Painter + Edit model, shows ASCII node graph, suggests prompt, and presents budget vs. quality model options.
