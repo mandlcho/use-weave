@@ -194,6 +194,85 @@ Each reference file is a markdown table with these columns:
 | **Best For** | Plain-language strength |
 | **Limitations** | What it's bad at or can't do |
 
+## Self-Learning Features
+
+### Reference Auto-Updating
+
+The skill supports updating its own reference files from the Weave documentation.
+
+**Trigger:** User says "update Weave models", "refresh Weave references", or similar.
+
+**Process:**
+1. Fetch the model comparison pages from help.weavy.ai:
+   - `https://help.weavy.ai/en/articles/12284752-image-models-comparison`
+   - `https://help.weavy.ai/en/articles/12344226-video-models-comparison`
+   - `https://help.weavy.ai/en/articles/12343904-edit-image-models-comparison`
+   - `https://help.weavy.ai/en/articles/12344174-generate-from-image-models-comparison`
+   - `https://help.weavy.ai/en/articles/12344205-enhance-images-models-comparison`
+   - `https://help.weavy.ai/en/articles/12344342-enhance-video-models-comparison`
+   - `https://help.weavy.ai/en/articles/12344357-3d-models-comparison`
+2. Diff fetched data against current reference files
+3. Report changes to user: "Found 3 new models, 1 price change, 1 removed model"
+4. On user confirmation, update the reference files
+5. Commit changes with a message listing what changed
+
+**Output format for changes:**
+```
+## Weave Reference Update — 2026-04-26
+
+### New Models
+- Seedream V5 (image-models.md) — 8 credits, text-to-image
+
+### Price Changes
+- Kling 3: 60 → 55 credits (video-models.md)
+
+### Removed Models
+- Flux 1.0 (image-models.md) — deprecated
+```
+
+### Workflow Library
+
+Confirmed workflows are saved to build a personal recipe book over time.
+
+**Location:**
+```
+references/workflows/
+├── video-restaging.md
+├── morph-transition-kling.md
+├── object-removal-flux-fill.md
+└── ...
+```
+
+**When to save:** After Claude recommends a workflow and the user confirms it worked (e.g., "that worked", "perfect", "saving this", or user explicitly asks to save it).
+
+**Workflow file format:**
+```markdown
+---
+task: Short description of what this workflow solves
+date_saved: YYYY-MM-DD
+models_used: [Model1, Model2]
+total_credits: estimated cost per run
+---
+
+## Task
+What this workflow accomplishes.
+
+## Node Graph
+[Import Video] --> [Extract Video Frame] --> [Seedream V4.5 Edit] --> [Export]
+                                                     |
+                                                [Prompt: "..."]
+
+## Models & Settings
+- **Seedream V4.5 Edit** — aspect ratio: 16:9, prompt adherence: high
+
+## Notes
+Any tips, gotchas, or variations discovered.
+```
+
+**Lookup priority:** When a user asks how to accomplish a task, Claude checks `references/workflows/` FIRST for a matching saved workflow before recommending from scratch. If a saved workflow exists, Claude presents it as "you've done this before — here's what worked" and offers to modify it if needed.
+
+**File naming:** Kebab-case summary of the task, e.g., `object-removal-flux-fill.md`, `broll-seedream-v45.md`.
+
 ## Behavior Rules
 
 1. Claude ONLY recommends nodes/models that exist in the reference files — never hallucinate
@@ -202,8 +281,10 @@ Each reference file is a markdown table with these columns:
 4. Reference files are loaded on-demand, not all at once
 5. When unsure which model fits, Claude asks a clarifying question rather than guessing
 6. Claude uses Weave's node color terminology when helpful (green = image, red = video, purple = text, lime = mask)
+7. Check `references/workflows/` first before recommending a workflow from scratch
+8. Save confirmed workflows to `references/workflows/` when user indicates success
 
 ## Future Considerations
 
 - When Figma Weave ships their public API, build an MCP server for programmatic workflow creation and execution
-- Reference files should be updated as Weave adds/removes models — check help.weavy.ai for changes
+- Consider a scheduled agent (`/schedule`) to auto-check for model updates weekly
