@@ -155,7 +155,27 @@ Format for recommendations:
 - **Best quality:** model name (X credits) — why
 - **Alternative:** model name (X credits) — when to use instead
 
-#### 5. Node Graph Rendering Rules
+#### 5. Prompt Generation
+
+Every workflow recommendation that involves a generative model MUST include a **suggested prompt** ready to paste into Weave's Prompt node.
+
+**Prompt writing rules:**
+- Write prompts optimized for the specific model being recommended (image models vs. video models have different prompting styles)
+- Be descriptive and specific: subject, style, lighting, mood, composition, detail level
+- Include negative prompt suggestions when the model supports it
+- Keep prompts concise but rich — avoid filler words that waste tokens
+
+**Output format:**
+```
+Suggested prompt: "Futuristic cyberpunk office interior, neon lighting, holographic
+displays, dark moody atmosphere, high detail, cinematic lighting"
+
+Negative prompt: "blurry, low quality, distorted, watermark"
+```
+
+**Saving prompts:** When a workflow is saved to `references/workflows/`, the prompt that worked is saved alongside it in a `## Prompts` section. Users can reuse and tweak saved prompts for similar tasks.
+
+#### 6. Node Graph Rendering Rules
 
 Every workflow recommendation MUST include an ASCII node graph. Rules:
 
@@ -264,6 +284,10 @@ What this workflow accomplishes.
 
 ## Models & Settings
 - **Seedream V4.5 Edit** — aspect ratio: 16:9, prompt adherence: high
+
+## Prompts
+- **Seedream V4.5 Edit prompt:** "Restaged modern office interior, clean minimal furniture, natural daylight, photorealistic"
+- **Negative prompt:** "blurry, low quality, distorted"
 
 ## Notes
 Any tips, gotchas, or variations discovered.
